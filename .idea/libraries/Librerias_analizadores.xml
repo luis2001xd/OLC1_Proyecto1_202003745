@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="Librerias_analizadores">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/Documents/Compiladores 1/java-cup-11b.jar!/" />
+      <root url="jar://$USER_HOME$/Documents/Compiladores 1/jflex-full-1.7.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

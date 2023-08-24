@@ -1,0 +1,26 @@
+package Analizadores;
+import java_cup.runtime.*;
+
+parser code
+
+{:
+
+public void syntax_error(Symbol s){
+        System.out.println("Error R de sintaxis: "+ s.value +" Linea "+(s.left+1)+" columna "+(s.right+1) );
+    }
+
+    public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception{
+        System.out.println("Error NR de sintaxis: "+ s.value +" Linea "+(s.left+1)+" columna "+(s.right+1) );
+    }
+
+:}
+
+terminal String LLAVE_ABERTURA,LLAVE_CIERRE,CONJUNTOS,NOMBRE,DOBLEPTO,NOMBRE,FLECHA,MAYUS,MINUS,DIGITO;
+non terminal ini;
+non terminal conjuntos;
+non terminal expresion;
+non terminal nombre;
+
+start with ini;
+
+ini::=instrucciones;
