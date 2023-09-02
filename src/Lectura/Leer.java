@@ -35,6 +35,7 @@ public class Leer {
             escritor.println(contenido);
             archivo.close();
 
+
         } catch (Exception e){
             System.out.println(e);
         }
