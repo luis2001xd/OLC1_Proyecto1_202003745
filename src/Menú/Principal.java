@@ -4,31 +4,20 @@ import java.io.StringReader;
 
 public class Principal {
     public static void main(String[] args) {
-
         //analizadores("src/Analizadores/", "Lexer.jflex", "Parser.cup");
-
-        String codigo = "void " +
-                " main(){" +
-                "int x = 9;" +
-                "double r = 12.5;" +
-                "string luis = \"Hola mundo, ahí andamos\"+\"Hola mundo, ahí andamosx3\";" +
-                "bool verdad = trUE;" +
-                "bool false = !x;" +
-                "Console.Write(hola);" +
-                "if ( a > b){" +
-                "int a = 5;" +
-                "int l = 122;" +
-                "int y = 112;" +
-                "}else if (x > 9){" +
-                "int p = 123;" +
-                "}else if (h>12){" +
-                "int w = 2323;" +
-                "}" +
-                "Console.Write(holsx3);";
+        String codigo_2 = Lectura.Leer.LeerArchivo("/home/cluiis/IdeaProjects/OLC1_Proyecto1_202003745/Pruebas/Prueba.sp");
+        String codigo =
+                "void main ( ){" +
+                "int x = 1;\n" +
+                "do{\n" +
+                "Console.Write(a);" +
+                "}\n" +
+                "while (a > 10);\n" +
+                "}\n"
         ;
 
-        System.out.println(codigo);
-        analizar(codigo);
+
+        analizar(codigo_2);
 
          //new Ventana();
     }

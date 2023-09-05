@@ -11,12 +11,12 @@ parser code
 {:
     public void syntax_error(Symbol s)
     {
-            System.err.println("Error Sintactico: "+ s.value + " - Fila: " + s.right + " - Columna: " + s.left + ". Recuperado" );
+            System.err.println("Error Sintactico: "+ s.value + " - Fila: " + s.left + " - Columna: " + s.right + ". Recuperado" );
     }
 
     public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception
     {
-            System.err.println("Error Sintactico: "+ s.value + " - Fila: " + s.right + " - Columna: " + s.left + ". Sin recuperacion." );
+            System.err.println("Error Sintactico: "+ s.value + " - Fila: " + s.left + " - Columna: " + s.right + ". Sin recuperacion." );
     }
 
 :}
@@ -31,8 +31,9 @@ action code
 //------> Declaración de terminales
 terminal String MAIN, LLAVE_ABERTURA, VOID, PRINT, PARENTESIS_ABERTURA, PARENTESIS_CIERRE,
 LLAVE_CIERRE, MAYOR_IGUAL, MENOR_IGUAL, DOBLE_IGUAL, DISTINTO, INT, DOUBLE, CHAR, BOOLEAN,
-STRING, IF, IGUAL, ENTERO, PTOCOMA, VARIABLE, CARACTER, DECIMAL, SUMA, MENOS, MULT, DIVISION,UMENOS,
-T_F, CADENA, CONCAT, AND, OR, NOT, MAYOR_QUE, MENOR_QUE, ELSEIF;
+STRING, IF, IGUAL, ENTERO, PTOCOMA, VARIABLE, DECIMAL, SUMA, MENOS, MULT, DIVISION,UMENOS,
+T_F, CADENA, CONCAT, AND, OR, NOT, MAYOR_QUE, MENOR_QUE, ELSEIF, ELSE, DOSPTOS, SWITCH,
+DEFAULT, CASE, BREAK, FOR, INCREMENTO, WHILE, DO, DEFINIR_GLOBALES, DOLAR, NEWVALOR, COMA;
 //------> Declaración de no terminales
 
 
@@ -41,7 +42,7 @@ non terminal inicio;
 non terminal main;
 non terminal instrucciones;
 non terminal lista_instrucciones;
-non terminal lista_cadenas;
+
 
 // no terminales para declaraciones de variables
 non terminal declaracion_variables;
@@ -53,9 +54,8 @@ non terminal declaracion_double;
 non terminal declaracion_char;
 
 // no terminales para sentencias de control y de repeticion
-non terminal estructuraif;
-non terminal sentencias_control;
-non terminal sentencias_repeticion;
+non terminal estructura_if;
+non terminal estructura_for;
 
 
 //no terminales para asignaciones
@@ -67,10 +67,25 @@ non terminal variable;
 non terminal expresion;
 // otros
 non terminal imprimir;
-non terminal cadena;
+
 nonterminal tipodato;
-non terminal estructuraelseif;
+non terminal estructura_elseif;
 non terminal lista_elseif;
+non terminal estructura_else;
+non terminal estructura_switch;
+non terminal declaracion_sin_asignar;
+non terminal lista_case;
+non terminal estructura_case;
+non terminal case_end;
+non terminal expresion_for;
+non terminal estructura_while;
+non terminal estructura_dowhile;
+non terminal definir_globales;
+non terminal instrucciones_globales;
+non terminal tipo_globales;
+non terminal definiciones_globales;
+non terminal definicion_double;
+
 // Precedencias de operadores aritméticos
 precedence left OR;
 precedence left AND;
@@ -92,41 +107,92 @@ start with inicio;
 /* Definición de producción */
 inicio ::= main;
 
-main ::= VOID MAIN PARENTESIS_ABERTURA PARENTESIS_CIERRE LLAVE_ABERTURA lista_instrucciones{::};
+main ::= VOID MAIN PARENTESIS_ABERTURA PARENTESIS_CIERRE LLAVE_ABERTURA lista_instrucciones LLAVE_CIERRE{::};
 
 lista_instrucciones ::= lista_instrucciones instrucciones {::}
                      | instrucciones {::}
+                     | error  PTOCOMA
                      ;
 
 
-instrucciones ::= declaracion |
-                  imprimir|
-                  estructuraif
+instrucciones ::= declaracion
+                  |imprimir
+                  |estructura_if
+                  |estructura_switch
+                  |declaracion_sin_asignar
+                  |estructura_for
+                  |estructura_while
+                  |estructura_dowhile
+                  |definir_globales
                  ;
 
 declaracion ::= tipodato VARIABLE IGUAL expresiones PTOCOMA{:System.out.println("Se delcaro todo bien");:}| tipodato VARIABLE PTOCOMA{:System.out.println("Calma, todo sigue bien");:};
 
 imprimir ::= PRINT PARENTESIS_ABERTURA expresiones PARENTESIS_CIERRE PTOCOMA{:System.out.println("Se imprimio algo");:};
 
+declaracion_sin_asignar ::= VARIABLE IGUAL expresiones PTOCOMA;
 
 
 
-
-estructuraif ::= IF PARENTESIS_ABERTURA expresiones PARENTESIS_CIERRE LLAVE_ABERTURA
-                lista_instrucciones LLAVE_CIERRE|
+// Estructuras de if
+estructura_if ::= IF PARENTESIS_ABERTURA expresiones PARENTESIS_CIERRE LLAVE_ABERTURA
+                lista_instrucciones LLAVE_CIERRE lista_elseif estructura_else{:System.out.println("JUsto aqui");:}|
                 IF PARENTESIS_ABERTURA expresiones PARENTESIS_CIERRE LLAVE_ABERTURA
-                lista_instrucciones LLAVE_CIERRE lista_elseif;
+                lista_instrucciones LLAVE_CIERRE estructura_else |
+                IF PARENTESIS_ABERTURA expresiones PARENTESIS_CIERRE LLAVE_ABERTURA
+                lista_instrucciones LLAVE_CIERRE lista_elseif|
+                IF PARENTESIS_ABERTURA expresiones PARENTESIS_CIERRE LLAVE_ABERTURA
+                lista_instrucciones LLAVE_CIERRE
+                ;
+                //IF PARENTESIS_ABERTURA expresiones PARENTESIS_CIERRE LLAVE_ABERTURA
+                //lista_instrucciones LLAVE_CIERRE estructuras;
+
                 //{:System.out.println("Termino la instruccion del if");:} ;
 
 
 
-// expresiones para números
 
-lista_elseif ::= lista_elseif estructuraelseif | estructuraelseif;
 
-estructuraelseif ::= ELSEIF PARENTESIS_ABERTURA expresiones PARENTESIS_CIERRE LLAVE_ABERTURA
- lista_instrucciones LLAVE_CIERRE {:System.out.println("Llegamos al else if");:};
+lista_elseif ::= lista_elseif estructura_elseif |
+estructura_elseif;
 
+estructura_elseif ::= ELSEIF PARENTESIS_ABERTURA expresiones PARENTESIS_CIERRE LLAVE_ABERTURA
+lista_instrucciones LLAVE_CIERRE;
+
+estructura_else ::= ELSE LLAVE_ABERTURA lista_instrucciones LLAVE_CIERRE;
+
+
+
+//Estructuras de switch
+
+estructura_switch ::= SWITCH PARENTESIS_ABERTURA expresiones PARENTESIS_CIERRE LLAVE_ABERTURA lista_case DEFAULT DOSPTOS lista_instrucciones case_end LLAVE_CIERRE;
+
+lista_case ::= lista_case estructura_case | estructura_case;
+
+estructura_case ::= CASE expresiones DOSPTOS lista_instrucciones case_end;
+
+case_end ::= BREAK PTOCOMA | /* vacío */;
+
+
+//Estructura del for
+
+estructura_for ::= FOR  PARENTESIS_ABERTURA declaracion expresiones PTOCOMA VARIABLE INCREMENTO PARENTESIS_CIERRE
+LLAVE_ABERTURA lista_instrucciones LLAVE_CIERRE;
+
+
+// estructura para el while
+
+estructura_while ::= WHILE PARENTESIS_ABERTURA expresiones PARENTESIS_CIERRE LLAVE_ABERTURA lista_instrucciones LLAVE_CIERRE;
+
+
+
+// estructura del do-while
+
+estructura_dowhile ::= DO LLAVE_ABERTURA lista_instrucciones LLAVE_CIERRE WHILE PARENTESIS_ABERTURA expresiones PARENTESIS_CIERRE PTOCOMA;
+
+
+
+// estructuras para las expresiones
 expresiones  ::=
   MENOS expresiones:a                      {::}%prec UMENOS
  |expresiones:a SUMA        expresiones:b     {::}
@@ -137,11 +203,11 @@ expresiones  ::=
  |DECIMAL: a
  |CADENA
  |VARIABLE
- |CARACTER
  |T_F
+ |llamada_funcion
  |expresiones OR expresiones
  |expresiones AND expresiones
- |NOT expresiones{:System.out.println("HOla que hacendasad");:}
+ |NOT expresiones{::}
  |expresiones DOBLE_IGUAL expresiones
  |expresiones DISTINTO expresiones
  |expresiones MENOR_QUE expresiones
@@ -155,6 +221,17 @@ tipodato ::= INT | STRING | DOUBLE | CHAR | BOOLEAN;
 llamada_funcion ::= VARIABLE PARENTESIS_ABERTURA expresiones PARENTESIS_CIERRE;
 
 
+// Definir globales
 
+definir_globales ::= VOID DEFINIR_GLOBALES PARENTESIS_ABERTURA PARENTESIS_CIERRE LLAVE_ABERTURA instrucciones_globales LLAVE_CIERRE;
+
+instrucciones_globales ::= instrucciones_globales definiciones_globales | definiciones_globales;
+
+definiciones_globales ::= tipo_globales ;
+
+tipo_globales ::= definicion_double | STRING VARIABLE IGUAL CADENA PTOCOMA;
+
+definicion_double ::= DOUBLE VARIABLE IGUAL DOLAR LLAVE_ABERTURA NEWVALOR COMA
+CADENA COMA CADENA LLAVE_CIERRE PTOCOMA{:System.out.println("Definio otro tipo de hlobal");:} | DOUBLE VARIABLE IGUAL DECIMAL PTOCOMA;
 
 

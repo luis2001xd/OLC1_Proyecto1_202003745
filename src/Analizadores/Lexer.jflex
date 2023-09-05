@@ -11,8 +11,9 @@ import java_cup.runtime.*;
 %class Lexer  // definir como trabajara el scanner
 %cup            // trabajar con cup
 %public         // tipo publico
-%line           // conteo de lineas - linea por linea
-%char           // caracter por caracter
+%char
+%column
+%line          // caracter por caracter
 %unicode        // tipo de codigicacion para que acepte la  ñ u otro caracter
 %ignorecase     // case insensitive
 
@@ -36,11 +37,11 @@ MENOR_IGUAL = "<="
 DOBLE_IGUAL = "=="
 DISTINTO = "!="
 AND = "&&"
-OR = "|"
+OR = "||"
 NOT = "!"
 CONCAT = "+"
-
-
+INCREMENTO = "++"
+DOSPTOS = ":"
 PTOCOMA = ";"
 
 //PALABRAS RESERVADAS
@@ -54,6 +55,7 @@ STRING = "string"
 IF = "if"
 IGUAL = "="
 ELSEIF = "else if"
+ELSE = "else"
 SWITCH = "switch"
 CASE = "case"
 FOR = "for"
@@ -61,21 +63,34 @@ WHILE = "while"
 DO = "do"
 MAIN = "main"
 VOID = "void"
+DEFAULT = "default"
+BREAK = "break"
+DEFINIR_GLOBALES = "DefinirGlobales"
+NEWVALOR = "NewValor"
+DOLAR = "$"
+COMA = ","
+GRAFICA_BARRAS = "GraficaBarras"
+ARREGLO = "[]"
+TITULO = "Título" | "Titulo"
+EJEX = "EjeX"
+VALORES = "Valores"
+TITULOEJEX = "TituloX"
+TITULOEJEY = "TituloY"
 
 // ------> Expresiones Regulares
 
-
-EXPRESION = {COMILLA} .* {COMILLA}
+CARACTER = [^\r\n]
+ENTER   = \r|\n|\r\n
 COMENTARIOLINEA = "//" {CARACTER}* {ENTER}?
 COMENTARIOMULTI = "/*" [^/]~ "*/"
 VARIABLE = [a-zA-Z_][a-zA-Z0-9_]*
-CARACTER = '[^\\']'
+
 SPACE   = [\ \r\t\f\t]
 
 ENTERO = [0-9]*
 DECIMAL = [0-9]+("."[  |0-9]+)?
 DECIMAL = [0-9]+("."[  |0-9]+)?
-CADENA = [\"][^\"\n]*[\"]
+CADENA = [\"'][^\"\n']*[\"']
 %%
 {MAIN} {return new Symbol (sym.MAIN,yyline,yycolumn, yytext());}
 {LLAVE_ABERTURA} {return new Symbol(sym.LLAVE_ABERTURA, yyline, yycolumn, yytext()); }
@@ -106,26 +121,46 @@ CADENA = [\"][^\"\n]*[\"]
 {BOOLEAN} {return new Symbol(sym.BOOLEAN, yyline, yycolumn, yytext()); }
 {STRING} {return new Symbol(sym.STRING, yyline, yycolumn, yytext()); }
 {IF} {return new Symbol(sym.IF, yyline, yycolumn, yytext()); }
-{VARIABLE} {return new Symbol (sym.VARIABLE,yyline,yycolumn, yytext());}
+{ELSE} {return new Symbol(sym.ELSE, yyline, yycolumn, yytext()); }
+{ELSEIF} {return new Symbol(sym.ELSEIF, yyline, yycolumn, yytext()); }
+
 {IGUAL} {return new Symbol(sym.IGUAL, yyline, yycolumn, yytext()); }
-{CARACTER} {return new Symbol(sym.CARACTER, yyline, yycolumn, yytext()); }
+{SWITCH} {return new Symbol(sym.SWITCH, yyline, yycolumn, yytext()); }
+{CASE} {return new Symbol(sym.CASE, yyline, yycolumn, yytext()); }
+{BREAK} {return new Symbol(sym.BREAK, yyline, yycolumn, yytext()); }
+{DEFAULT} {return new Symbol(sym.DEFAULT, yyline, yycolumn, yytext()); }
+{DOSPTOS} {return new Symbol(sym.DOSPTOS, yyline, yycolumn, yytext()); }
+{FOR} {return new Symbol(sym.FOR, yyline, yycolumn, yytext()); }
+{INCREMENTO} {return new Symbol(sym.INCREMENTO, yyline, yycolumn, yytext()); }
+{PTOCOMA} {return new Symbol (sym.PTOCOMA,yyline,yycolumn, yytext());}
+{PARENTESIS_CIERRE} {return new Symbol(sym.PARENTESIS_CIERRE, yyline, yycolumn, yytext()); }
+{WHILE} {return new Symbol(sym.WHILE, yyline, yycolumn, yytext()); }
+{DEFINIR_GLOBALES} {return new Symbol(sym.DEFINIR_GLOBALES, yyline, yycolumn, yytext()); }
+{NEWVALOR} {return new Symbol(sym.NEWVALOR, yyline, yycolumn, yytext()); }
+{DOLAR} {return new Symbol(sym.DOLAR, yyline, yycolumn, yytext()); }
+{COMA} {return new Symbol(sym.COMA, yyline, yycolumn, yytext()); }
+{GRAFICA_BARRAS} {return new Symbol(sym.GRAFICA_BARRAS, yyline, yycolumn, yytext()); }
+//{CARACTER} {return new Symbol(sym.CARACTER, yyline, yycolumn, yytext()); }
+
 
 {CONCAT} {return new Symbol(sym.CONCAT, yyline, yycolumn, yytext()); }
 
-{ELSEIF} {return new Symbol(sym.ELSEIF, yyline, yycolumn, yytext()); }
-//{SWITCH} {return new Symbol(sym.SWITCH, yyline, yycolumn, yytext()); }
-//{CASE} {return new Symbol(sym.CASE, yyline, yycolumn, yytext()); }
-//{FOR} {return new Symbol(sym.FOR, yyline, yycolumn, yytext()); }
-//{WHILE} {return new Symbol(sym.WHILE, yyline, yycolumn, yytext()); }
-//{DO} {return new Symbol(sym.DO, yyline, yycolumn, yytext()); }
 
-{T_F} {return new Symbol (sym.T_F,yyline,yycolumn, yytext());}
 
+
+
+
+{DO} {return new Symbol(sym.DO, yyline, yycolumn, yytext()); }
+
+{T_F} {System.out.println("Reconocio TRUE OR FALSE: "+yytext());return new Symbol (sym.T_F,yyline,yycolumn, yytext());}
+{VARIABLE} {return new Symbol (sym.VARIABLE,yyline,yycolumn, yytext());}
 {ENTERO} {System.out.println("Reconocio ENTERO: "+yytext());return new Symbol (sym.ENTERO,yyline,yycolumn, yytext());}
 {DECIMAL} {System.out.println("Reconocio ENTERO: "+yytext());return new Symbol (sym.DECIMAL,yyline,yycolumn, yytext());}
-{PTOCOMA} {return new Symbol (sym.PTOCOMA,yyline,yycolumn, yytext());}
+
 {CADENA} {return new Symbol(sym.CADENA, yyline, yycolumn, yytext()); }
-{PARENTESIS_CIERRE} {return new Symbol(sym.PARENTESIS_CIERRE, yyline, yycolumn, yytext()); }
+
 [ \t\r\n\f]     {/* Espacios en blanco se ignoran */}
+{COMENTARIOLINEA}   {System.out.println("Comentario: "+yytext()); }
+{COMENTARIOMULTI}   { System.out.println("Comentario: multilinea"+yytext()); }
 
 .           	{ System.out.println("Error Lexico: " + yytext() + " | Fila:" + yyline + " | Columna: " + yycolumn); }
