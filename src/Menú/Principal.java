@@ -4,22 +4,39 @@ import java.io.StringReader;
 
 public class Principal {
     public static void main(String[] args) {
-        //analizadores("src/Analizadores/", "Lexer.jflex", "Parser.cup");
-        String codigo_2 = Lectura.Leer.LeerArchivo("/home/cluiis/IdeaProjects/OLC1_Proyecto1_202003745/Pruebas/Prueba.sp");
+        //analizadores("src/Statpy/", "Lexer.jflex", "Parser.cup");
+        //analizadores("src/Json/", "Lexer.jflex", "Parser.cup");
+        //String codigo_2 = Lectura.Leer.LeerArchivo("/home/cluiis/IdeaProjects/OLC1_Proyecto1_202003745/Pruebas/Prueba.sp");
         String codigo =
                 "void main ( ){" +
-                "int x = 1;\n" +
-                "do{\n" +
-                "Console.Write(a);" +
-                "}\n" +
-                "while (a > 10);\n" +
-                "}\n"
+                        "for (int x = 5; x > 21; x++){" +
+                        "console.write(holaaaa);" +
+                        "int v = -1212;" +
+                        "if (x > 10){" +
+                        "int ty = 2001;//hola\n" +
+                        "}" +
+                        "}" +
+                        "console.write(h);" +
+                        "console.write(dd);" +
+                        "console.write(aqwqw);" +
+                        "while (f < 10){" +
+                        "console.write(xd);" +
+                        "}" +
+                        "int p = 0;" +
+                        "do{" +
+                        "console.write(x);" +
+                        "}while(p > 1123);" +
+                        "int f = 567;"+
+                        "} "
         ;
 
 
-        analizar(codigo_2);
+        //String json = Lectura.Leer.LeerArchivo("/home/cluiis/IdeaProjects/OLC1_Proyecto1_202003745/Pruebas/archivo.json");
 
-         //new Ventana();
+        //analizar(json);
+        //new Ventana();
+        Double x = 12.0;
+        System.out.println(x);
     }
 
 
@@ -48,14 +65,18 @@ public class Principal {
 
     public static void analizar (String entrada){
         try {
-            Analizadores.Lexer lexer = new Analizadores.Lexer(new StringReader(entrada));
-            Analizadores.Parser parser = new Analizadores.Parser(lexer);
+            Json.Lexer lexer = new Json.Lexer(new StringReader(entrada));
+            Json.Parser parser = new Json.Parser(lexer);
             parser.parse();
         } catch (Exception e) {
             System.out.println("Error fatal en compilación de entrada.");
             System.out.println(e);
         }
     }
+
+
+
+
 
 
     

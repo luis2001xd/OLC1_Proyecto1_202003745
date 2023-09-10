@@ -1,7 +1,7 @@
 // Ya salio compi1 :)
 
 void main ( ){
-	int b = 2;
+	int b = 21
 	int a = 1;
 	int var1 = 5+8*9;
 	if (b > a){

@@ -1,4 +1,4 @@
-package Analizadores;
+package Statpy;
 import java_cup.runtime.*;
 
 %%
@@ -69,13 +69,14 @@ DEFINIR_GLOBALES = "DefinirGlobales"
 NEWVALOR = "NewValor"
 DOLAR = "$"
 COMA = ","
-GRAFICA_BARRAS = "GraficaBarras"
+GRAFICABARRAS = "GraficaBarras"
 ARREGLO = "[]"
-TITULO = "Título" | "Titulo"
+TITULO = "Titulo"
 EJEX = "EjeX"
 VALORES = "Valores"
 TITULOEJEX = "TituloX"
 TITULOEJEY = "TituloY"
+GRAFICAPIE = "GraficaPie"
 
 // ------> Expresiones Regulares
 
@@ -89,7 +90,6 @@ SPACE   = [\ \r\t\f\t]
 
 ENTERO = [0-9]*
 DECIMAL = [0-9]+("."[  |0-9]+)?
-DECIMAL = [0-9]+("."[  |0-9]+)?
 CADENA = [\"'][^\"\n']*[\"']
 %%
 {MAIN} {return new Symbol (sym.MAIN,yyline,yycolumn, yytext());}
@@ -101,7 +101,7 @@ CADENA = [\"'][^\"\n']*[\"']
 
 //{COMILLA} {return new Symbol(sym.COMILLA, yyline, yycolumn, yytext()); }
 
-{LLAVE_CIERRE} {return new Symbol(sym.LLAVE_CIERRE, yyline, yycolumn, yytext()); }
+{LLAVE_CIERRE } { return new Symbol(sym.LLAVE_CIERRE, yyline, yycolumn, yytext()); }
 {MAYOR_QUE} {return new Symbol(sym.MAYOR_QUE, yyline, yycolumn, yytext()); }
 {MENOR_QUE} {return new Symbol(sym.MENOR_QUE, yyline, yycolumn, yytext()); }
 {SUMA} {return new Symbol(sym.SUMA, yyline, yycolumn, yytext()); }
@@ -136,10 +136,18 @@ CADENA = [\"'][^\"\n']*[\"']
 {PARENTESIS_CIERRE} {return new Symbol(sym.PARENTESIS_CIERRE, yyline, yycolumn, yytext()); }
 {WHILE} {return new Symbol(sym.WHILE, yyline, yycolumn, yytext()); }
 {DEFINIR_GLOBALES} {return new Symbol(sym.DEFINIR_GLOBALES, yyline, yycolumn, yytext()); }
+{GRAFICABARRAS} {return new Symbol(sym.GRAFICABARRAS, yyline, yycolumn, yytext()); }
 {NEWVALOR} {return new Symbol(sym.NEWVALOR, yyline, yycolumn, yytext()); }
 {DOLAR} {return new Symbol(sym.DOLAR, yyline, yycolumn, yytext()); }
 {COMA} {return new Symbol(sym.COMA, yyline, yycolumn, yytext()); }
-{GRAFICA_BARRAS} {return new Symbol(sym.GRAFICA_BARRAS, yyline, yycolumn, yytext()); }
+{ARREGLO} {return new Symbol(sym.ARREGLO, yyline, yycolumn, yytext()); }
+{TITULO} {return new Symbol(sym.TITULO, yyline, yycolumn, yytext()); }
+{EJEX} {return new Symbol(sym.EJEX, yyline, yycolumn, yytext()); }
+{VALORES} {return new Symbol(sym.VALORES, yyline, yycolumn, yytext()); }
+{TITULOEJEX} {return new Symbol(sym.TITULOEJEX, yyline, yycolumn, yytext()); }
+{TITULOEJEY} {return new Symbol(sym.TITULOEJEY, yyline, yycolumn, yytext()); }
+{GRAFICAPIE}  {return new Symbol(sym.GRAFICAPIE, yyline, yycolumn, yytext()); }
+
 //{CARACTER} {return new Symbol(sym.CARACTER, yyline, yycolumn, yytext()); }
 
 
@@ -152,15 +160,15 @@ CADENA = [\"'][^\"\n']*[\"']
 
 {DO} {return new Symbol(sym.DO, yyline, yycolumn, yytext()); }
 
-{T_F} {System.out.println("Reconocio TRUE OR FALSE: "+yytext());return new Symbol (sym.T_F,yyline,yycolumn, yytext());}
+{T_F} {return new Symbol (sym.T_F,yyline,yycolumn, yytext());}
 {VARIABLE} {return new Symbol (sym.VARIABLE,yyline,yycolumn, yytext());}
-{ENTERO} {System.out.println("Reconocio ENTERO: "+yytext());return new Symbol (sym.ENTERO,yyline,yycolumn, yytext());}
-{DECIMAL} {System.out.println("Reconocio ENTERO: "+yytext());return new Symbol (sym.DECIMAL,yyline,yycolumn, yytext());}
+{ENTERO} {return new Symbol (sym.ENTERO,yyline,yycolumn, yytext());}
+{DECIMAL} {return new Symbol (sym.DECIMAL,yyline,yycolumn, yytext());}
 
 {CADENA} {return new Symbol(sym.CADENA, yyline, yycolumn, yytext()); }
 
 [ \t\r\n\f]     {/* Espacios en blanco se ignoran */}
-{COMENTARIOLINEA}   {System.out.println("Comentario: "+yytext()); }
-{COMENTARIOMULTI}   { System.out.println("Comentario: multilinea"+yytext()); }
+{COMENTARIOLINEA}   {/*System.out.println("Comentario: "+yytext());*/ }
+{COMENTARIOMULTI}   { /*System.out.println("Comentario: multilinea"+yytext());*/ }
 
 .           	{ System.out.println("Error Lexico: " + yytext() + " | Fila:" + yyline + " | Columna: " + yycolumn); }

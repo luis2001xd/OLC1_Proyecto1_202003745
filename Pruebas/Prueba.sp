@@ -1,74 +1,83 @@
-// Salio compi 1 XD&&&&$$$$$
-/* INVESTIGACION DE OPERACIONES
-2 ES EL PEOR
-CURSO */
+// Hola, Bienvenido al archivo de Prueba
 
-void main(){
-    int x = 9;
-    int y = 12 * 8 + 9.5 + 8.5 - 10 + 18 / 2;
-    int precio = 0;
-    double z = 19.5;
-    bool flag1 = TRUE;
-    bool flag2 = 9 >= 5;
-    string cadena = "Hola mundo, esto es una prueba ###";
-    string cadena_2 = cadena + "Esto es la continuación de hola mundo";
-    char caracter_1 = 'h';
-    Console.Write("Este es el proyecto 1 de compiladores" + cadena + cadena_2);
-    Console.Write(y + x);
-    Console.Write("&&11/()))))");
-    for (int i = 0; i <= 10; i++){
-        if (i == 10){
-            Console.Write(i);
-            int a = i;
-        } else if (i > 5){
-            Console.Write("i es mayor que 5"); // Cambiado a mayúscula
-            int b = a; // Variable 'a' definida dentro del bloque 'if', por lo que no es accesible en el bloque 'else if'
-            while (b <= i){
-                Console.Write("i es mayor o igual que b");
-                Console.Write("Esto es un ciclo while");
-                char v = 'j';
-            }
-        } else {
-            Console.Write("Esto es un else");
-        }
-    } // Cierre de llave para el bucle 'for'
+/*
+	Vamos a poner a Prueba si aceptan comentarios
+	en varias Lineas
+*/
 
-    void DefinirGlobales(){
-    		string reporte1 = "Reporte 1";
-    		double pe1 = 0.8;
-    		double pe2 = 0.5;
-    		double pe3 = 0.2;
-    		double po1 = ${ NewValor, "archivo2.json", "valor1"};
-    		double po2 = ${ NewValor, "archivo1.json", "valor1"};
-    		string vart = "Valor Obtenido";
-    		string var2 = "Valor Esperado clase 1";
-    		string var22 = "Valor Obtenido clase 1";
-    		string var3 = "Valore Esperado clase 2";
-    		string var3 = "Valor Obtenido clase 2";
-    	}
+void main (){
+	// Test de numeros
+	int simpleEntero = 10;
+	int enteros = simpleEntero + 2 - 2 * 2 / 2;
+	double decimales = 2.0 - 3.4;
+	decimales = 65.7 * decimales; // Asignacion
 
-    switch (x){
-        case 1:
-            precio = 12;
-            break; //HOLA
-        case 2:
-            precio = 567;
+	// Probemos los Print
+	Console.Write("String");
+	Console.Write(True || False && True && ! False); // True or False and True and not False
+	Console.Write(2<3 && 2.5>=7 || 3 != 5 || enteros == 7);
 
-        default:
-            if (precio == 12 || precio == 567){
-                Console.Write("Si funciona el switch");
-            } else {
-                Console.Write("Leyó el else también");
-            }
-            break;//Salir del default
+	// Probando el if
+	if (b > a){
+		Console.Write("Primer if");
+	}else if(a == b){
+		Console.Write("else if");
+	}else{
+		if (true){
+			Console.Write("if del else");
+		}
+	}
+
+	int precio; // Esto debería ser precio = None
+	switch(valor){
+		case 1:
+			precio = 55;
+			Console.Write("con if");
+			if(true){
+				precio = 61;
+			}
+			break;
+		case 2:
+			Console.Write("solo print");
+			precio = 25;
+		default:
+			Console.Write("Default");
+	}
+
+
+	while(a < 10){
+		Console.Write("el valor de a es: " + a);
+		for (int x=1; x<10; x++){
+			if (x == 5){
+				Console.Write("Mitad");
+			}
+		}
+
+		int a = 1;
+		do {
+			Console.Write("el valor de a es: " + a);
+		} while(a < 5);
+	}
+
+	void DefinirGlobales(){
+		string TItulo1 = "Notas";
+		double RePrObados = ${NewValor, "archivo.json", "val1"};
+	}
+
+	void GraFicaPie(){
+        string titulo = ${NewValor, "archivo.json", "titulo"};
+        string [] Ejex= {"compi1", "compi2"};
+        double [] Valores= {107.0, 200.0 };
     }
 
-    int a = 1;
-    do {
-        Console.Write("el valor de a es: " + a);
-    } while(a < 16);
+	void GraFicaBarras(){
+		string Titulo = titulo1;
+        string [] Ejex = { ${NewValor, "archivo.json", "ejex1"} , ${NewValor, "archivo.json", "ejex2"}};
+        double [] Valores= { reprobados, ${NewValor, "archivo.json", "val2"}};
+        string TituloX= "Eje X";
+        string TituloY= "Eje Y";
+	}
 
-    if ( a > 45 && b < 10 && !bool2){
-        Console.Write("Si sale compi 1 :))))"); // Animo si sale todavía
-    }
+
 }
+

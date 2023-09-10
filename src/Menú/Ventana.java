@@ -4,7 +4,12 @@ import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
+import Graficas.Globales;
+import Graficas.Variables;
+import Json.Parser;
 import Lectura.Leer;
+
 import java.io.*;
 
 public class Ventana extends JFrame{
@@ -20,7 +25,7 @@ public class Ventana extends JFrame{
     private JFileChooser arch;
 
     private File archivo;
-    private String nombreArchivo;
+    public String nombreArchivo, nombreArchivo2;
 
     private JComboBox Traductor;
 
@@ -97,6 +102,8 @@ public class Ventana extends JFrame{
                     arch.showOpenDialog(null);
                     archivo = arch.getSelectedFile();
                     nombreArchivo = archivo.toString();
+                    nombreArchivo2 = arch.getSelectedFile().getName();
+
                     textarea1.setText(Leer.LeerArchivo(archivo.toString()));
                 } catch (Exception r){
                     System.out.println("hola");
@@ -120,6 +127,7 @@ public class Ventana extends JFrame{
             public void actionPerformed(ActionEvent e) {
 
                 Leer.CrearArchivo(textarea1.getText(),nombreArchivo);
+
                 JOptionPane.showMessageDialog(null,"El archivo se guardo con éxito");
             }
         };
@@ -140,6 +148,7 @@ public class Ventana extends JFrame{
             public void actionPerformed(ActionEvent e) {
                 arch = new JFileChooser();
                 arch.showSaveDialog(botonGuardarComo);
+                nombreArchivo2 = arch.getSelectedFile().getName();
 
                 Leer.CrearArchivo(textarea1.getText(),arch.getSelectedFile().toString());
                 JOptionPane.showMessageDialog(null,"El archivo se guardo con éxito");
@@ -167,8 +176,31 @@ public class Ventana extends JFrame{
             @Override
             public void actionPerformed(ActionEvent e) {
 
-                //Traduccion.Creador.analizar(textarea1.getText());
+
+                String seleccion = (String) Traductor.getSelectedItem();
+                if (seleccion != null) {
+                    if (seleccion.equals("StatPy")) {
+                        analizarStatpy();
+                        textarea2.setText(Traduccion.Traductor.retornarTraduccion());
+                        textarea2.setEditable(false);
+                        //Graficas.Variables.mostrarGlobales();
+                        Traduccion.Traductor.traduccion.clear();
+
+                    } else if (seleccion.equals("Json")) {
+                        System.out.println("Seleccionaste Json");
+                        textarea2.setText("hola soy el json");
+                        Json.Parser.nombreDocumento = nombreArchivo2;
+                        analizarJson();
+
+
+                        textarea2.setEditable(false);
+
+                    }
+                }
+
+
             }
+
         };
         this.botonAnalizar.addActionListener(Analizar);
 
@@ -178,19 +210,43 @@ public class Ventana extends JFrame{
 
     private void areaTexto(){
         this.textarea1 = new JTextArea();
-        this.textarea1.setLineWrap(true); //Para que salte de línea al llegar al final del ancho del jTextArea
+
         this.textarea1.setBorder(border);
+        textarea1.setTabSize(4);
         this.scrollpane1 = new JScrollPane(textarea1);
         this.scrollpane1.setBounds(400,50,500,300);
         this.panel.add(scrollpane1);
 
         this.textarea2 = new JTextArea();
-        this.textarea2.setLineWrap(true); //Para que salte de línea al llegar al final del ancho del jTextArea
+
         this.textarea2.setBorder(border);
+        textarea2.setTabSize(4);
         this.scrollpane2 = new JScrollPane(textarea2);
-        this.scrollpane2.setBounds(230,480,500,200);
+        this.scrollpane2.setBounds(230,480,600,200);
         this.panel.add(scrollpane2);
 
+    }
+
+    public void analizarJson(){
+        try {
+            Json.Lexer lexer = new Json.Lexer(new StringReader(textarea1.getText()));
+            Json.Parser parser = new Json.Parser(lexer);
+            parser.parse();
+        } catch (Exception e) {
+            System.out.println("Error fatal en compilación de entrada.");
+            System.out.println(e);
+        }
+    }
+
+    public void analizarStatpy(){
+        try {
+            Statpy.Lexer lexer = new Statpy.Lexer(new StringReader(textarea1.getText()));
+            Statpy.Parser parser = new Statpy.Parser(lexer);
+            parser.parse();
+        } catch (Exception e) {
+            System.out.println("Error fatal en compilación de entrada.");
+            System.out.println(e);
+        }
     }
 
 }

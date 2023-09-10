@@ -1,0 +1,668 @@
+// ------------  Paquete e importaciones ------------
+package Statpy;
+
+import java_cup.runtime.*;
+
+import java.util.LinkedList;
+
+
+//------> Codigo para el parser
+//------> Declaracion de variables, funciones y funciones de error
+
+parser code 
+{:
+    String do_while = "";
+    public void syntax_error(Symbol s)
+    {
+            System.err.println("Error Sintactico: "+ s.value + " - Fila: " + s.left + " - Columna: " + s.right + ". Recuperado" );
+    }
+
+    public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception
+    {
+            System.err.println("Error Sintactico: "+ s.value + " - Fila: " + s.left + " - Columna: " + s.right + ". Sin recuperacion." );
+    }
+
+:}
+
+
+//------> Codigo para las acciones gramaticales (no tocar)
+action code
+{:  :}
+
+
+
+//------> Declaración de terminales
+terminal String MAIN, LLAVE_ABERTURA, VOID, PRINT, PARENTESIS_ABERTURA, PARENTESIS_CIERRE,
+LLAVE_CIERRE, MAYOR_IGUAL, MENOR_IGUAL, DOBLE_IGUAL, DISTINTO, INT, DOUBLE, CHAR, BOOLEAN,
+STRING, IF, IGUAL, ENTERO, PTOCOMA, VARIABLE, DECIMAL, SUMA, MENOS, MULT, DIVISION,UMENOS,
+T_F, CADENA, CONCAT, AND, OR, NOT, MAYOR_QUE, MENOR_QUE, ELSEIF, ELSE, DOSPTOS, SWITCH,
+DEFAULT, CASE, BREAK, FOR, INCREMENTO, WHILE, DO, DEFINIR_GLOBALES, DOLAR, NEWVALOR, COMA,
+GRAFICABARRAS, ARREGLO, TITULO, EJEX, VALORES, TITULOEJEX, TITULOEJEY, GRAFICAPIE;
+//------> Declaración de no terminales
+
+
+// no terminales principales
+non terminal inicio;
+non terminal main;
+non terminal instrucciones;
+non terminal LinkedList lista_instrucciones;
+
+
+// no terminales para declaraciones de variables
+non terminal declaracion_variables;
+non terminal declaracion;
+
+
+// no terminales para sentencias de control y de repeticion
+non terminal estructura_if;
+non terminal estructura_for;
+
+
+//no terminales para asignaciones
+non terminal expresiones;
+non terminal llamada_funcion;
+non terminal variable;
+non terminal expresion;
+// otros
+non terminal imprimir;
+
+nonterminal tipodato;
+non terminal estructura_elseif;
+non terminal LinkedList lista_elseif;
+non terminal LinkedList estructura_else;
+non terminal estructura_switch;
+non terminal declaracion_sin_asignar;
+non terminal LinkedList lista_case;
+non terminal estructura_case;
+non terminal case_end;
+non terminal expresion_for;
+non terminal estructura_while;
+non terminal estructura_dowhile;
+non terminal definir_globales;
+non terminal instrucciones_globales;
+non terminal tipo_globales;
+non terminal definiciones_globales;
+non terminal definicion_double;
+non terminal definir_barras;
+non terminal instrucciones_barras;
+non terminal instruccion_barras;
+non terminal tituloX;
+non terminal tituloY;
+non terminal titulo;
+non terminal valores;
+non terminal asignacion_valores;
+non terminal definicion_new;
+non terminal ejex;
+non terminal valor;
+non terminal definir_pie;
+non terminal instrucciones_pie;
+non terminal instruccion_pie;
+non terminal simbolos_for;
+non terminal asignacion_for;
+
+
+
+
+// Precedencias de operadores aritméticos
+precedence left OR;
+precedence left AND;
+precedence right NOT;
+precedence left DOBLE_IGUAL, DISTINTO, MENOR_QUE, MENOR_IGUAL, MAYOR_QUE, MAYOR_IGUAL;
+precedence left SUMA,MENOS;
+precedence left MULT,DIVISION;
+precedence right UMENOS;
+
+//------> Definir Simbolo Inicial
+start with inicio; 
+
+
+// ------------>  Producciones  <------------
+
+
+
+
+/* Definición de producción */
+inicio ::= main{::};
+
+main ::= VOID MAIN PARENTESIS_ABERTURA PARENTESIS_CIERRE LLAVE_ABERTURA
+lista_instrucciones:lista LLAVE_CIERRE
+{:LinkedList<String> lista_1 = new LinkedList<>();
+
+      lista_1.add("def"+" main "+"("+")"+":");
+      Traduccion.Traductor.contador++;
+      lista_1.addAll(Traduccion.Traductor.tabulaciones(lista));
+
+
+
+      Traduccion.Traductor.contador--;
+
+      lista_1.add ("if __name__ == \"__main__\":"+"\n"+"\t main()");
+
+      Traduccion.Traductor.traduccion.addAll(lista_1); :};
+
+lista_instrucciones ::= lista_instrucciones:lista instrucciones:val
+                        {:
+
+                            lista.addAll((LinkedList) val);
+                            RESULT = (LinkedList) lista;
+                        :}
+                     | instrucciones:val
+                     {:
+
+                     LinkedList<String> lista = new LinkedList<>();
+                     lista.addAll((LinkedList) val);
+                     RESULT = (LinkedList) lista;
+                     :}
+
+                     ;
+
+
+instrucciones ::= declaracion: val {:RESULT = val;:}
+                  |imprimir:val {: RESULT = val; :}
+                  |estructura_if:val {:RESULT = val;:}
+                  |estructura_switch:val {:RESULT = val;:}
+                  |declaracion_sin_asignar:val {:RESULT = val;:}
+                  |estructura_for:val{:RESULT = val;:}
+                  |estructura_while:val{:RESULT = val;:}
+                  |estructura_dowhile:val {:RESULT = val;:}
+                  |definir_globales{:
+                     LinkedList<String> lista = new LinkedList<>();
+
+                         lista.add("");
+                         RESULT = lista;
+                     :}
+                  |definir_barras{:
+                       LinkedList<String> lista = new LinkedList<>();
+
+                           lista.add("");
+                           RESULT = lista;
+                       :}
+                  |definir_pie{:
+                    LinkedList<String> lista = new LinkedList<>();
+
+                        lista.add("Paso");
+                        RESULT = lista;
+                    :}
+                  |error  PTOCOMA :val{:
+                  LinkedList<String> lista = new LinkedList<>();
+
+                      lista.add("");
+                      RESULT = lista;
+                  :}
+                 ;
+
+declaracion ::= tipodato VARIABLE:a IGUAL expresiones:b PTOCOMA
+{:
+    LinkedList<String> lista = new LinkedList<>();
+    lista.add(a +" = "+ b);
+    RESULT = lista;
+:}
+
+| tipodato VARIABLE:a PTOCOMA
+{:
+    LinkedList<String> lista = new LinkedList<>();
+
+    lista.add(a + "=" + "NONE");
+    RESULT = lista;
+:}
+;
+
+imprimir ::= PRINT PARENTESIS_ABERTURA expresiones:val PARENTESIS_CIERRE PTOCOMA
+{:
+    LinkedList<String> lista = new LinkedList<>();
+    String cadena = Traduccion.Traductor.cambiar(val.toString());
+    lista.add("print("+cadena+")");
+    RESULT = lista;
+            :};
+
+declaracion_sin_asignar ::= VARIABLE:a IGUAL expresiones:exp PTOCOMA
+{:
+    LinkedList<String> lista = new LinkedList<>();
+
+    lista.add(a + " = "+ exp);
+    RESULT = lista;
+            :}
+;
+
+
+
+// Estructuras de if
+estructura_if ::= IF PARENTESIS_ABERTURA expresiones:exp PARENTESIS_CIERRE LLAVE_ABERTURA
+                lista_instrucciones:inst LLAVE_CIERRE lista_elseif:inst_2 estructura_else:inst_3{:
+
+                         LinkedList<String> lista = new LinkedList<>();
+
+                         lista.add("if "+ exp + ":");
+                         Traduccion.Traductor.contador++;
+                         lista.addAll(Traduccion.Traductor.tabulaciones(inst));
+
+
+
+                         Traduccion.Traductor.contador--;
+
+                         lista.addAll(Traduccion.Traductor.tabulaciones(inst_2));
+                         lista.addAll(Traduccion.Traductor.tabulaciones(inst_3));
+
+
+
+                         RESULT = lista;
+                :}|
+                IF PARENTESIS_ABERTURA expresiones:exp PARENTESIS_CIERRE LLAVE_ABERTURA
+                lista_instrucciones:inst LLAVE_CIERRE estructura_else:inst_2 {:
+                    LinkedList<String> lista = new LinkedList<>();
+
+                         lista.add("if "+ exp + ":");
+                         Traduccion.Traductor.contador++;
+                         lista.addAll(Traduccion.Traductor.tabulaciones(inst));
+
+
+
+                         Traduccion.Traductor.contador--;
+
+                         lista.addAll(Traduccion.Traductor.tabulaciones(inst_2));
+
+
+
+
+                         RESULT = lista;
+                :}|
+                IF PARENTESIS_ABERTURA expresiones:exp PARENTESIS_CIERRE LLAVE_ABERTURA
+                lista_instrucciones:inst LLAVE_CIERRE lista_elseif:inst_2
+                {:
+                         LinkedList<String> lista = new LinkedList<>();
+
+                         lista.add("if "+ exp + ":");
+                         Traduccion.Traductor.contador++;
+                         lista.addAll(Traduccion.Traductor.tabulaciones(inst));
+
+
+
+                         Traduccion.Traductor.contador--;
+
+                         lista.addAll(Traduccion.Traductor.tabulaciones(inst_2));
+
+
+
+
+                         RESULT = lista;
+                                                                 :}
+
+                |IF PARENTESIS_ABERTURA expresiones:exp PARENTESIS_CIERRE LLAVE_ABERTURA
+                lista_instrucciones:inst_1 LLAVE_CIERRE
+                 {:
+                        LinkedList<String> lista = new LinkedList<>();
+                        lista.add("if "+ exp + ":");
+
+                        Traduccion.Traductor.contador++;
+                        lista.addAll(Traduccion.Traductor.tabulaciones(inst_1));
+                        Traduccion.Traductor.contador--;
+
+
+                        RESULT = lista;
+                    :}
+                ;
+                //IF PARENTESIS_ABERTURA expresiones PARENTESIS_CIERRE LLAVE_ABERTURA
+                //lista_instrucciones LLAVE_CIERRE estructuras;
+
+                //{:System.out.println("Termino la instruccion del if");:} ;
+
+
+
+
+
+lista_elseif ::= lista_elseif:lista estructura_elseif:val
+ {:lista.addAll((LinkedList) val);
+ RESULT = (LinkedList) lista;
+  ;
+                         :}
+|
+estructura_elseif:val{:
+  LinkedList<String> lista = new LinkedList<>();
+  lista.addAll((LinkedList) val);
+  RESULT = (LinkedList) lista;
+
+                     :};
+
+estructura_elseif ::= ELSEIF PARENTESIS_ABERTURA expresiones:exp PARENTESIS_CIERRE LLAVE_ABERTURA
+lista_instrucciones:inst LLAVE_CIERRE{:
+                    LinkedList<String> lista = new LinkedList<>();
+
+                        lista.add("else if "+ exp + ":");
+
+                        Traduccion.Traductor.contador++;
+
+                        lista.addAll(Traduccion.Traductor.tabulaciones(inst));
+                        Traduccion.Traductor.contador--;
+
+
+                        RESULT = lista;
+:};
+
+estructura_else ::= ELSE LLAVE_ABERTURA lista_instrucciones:inst LLAVE_CIERRE
+{:
+                        LinkedList<String> lista = new LinkedList<>();
+
+                        lista.add("else "+ ":");
+
+                        Traduccion.Traductor.contador++;
+
+                        lista.addAll(Traduccion.Traductor.tabulaciones(inst));
+                        Traduccion.Traductor.contador--;
+
+
+                        RESULT = lista;
+:}
+;
+
+
+
+//Estructuras de switch
+
+estructura_switch ::= SWITCH PARENTESIS_ABERTURA expresiones:exp PARENTESIS_CIERRE LLAVE_ABERTURA
+lista_case:inst DEFAULT DOSPTOS
+lista_instrucciones:inst_2 case_end LLAVE_CIERRE
+{:
+    LinkedList<String> lista = new LinkedList<>();
+
+    lista.add("def"+ " switch("+exp+")"+":");
+    String tabs = "";
+    Traduccion.Traductor.contador++;
+    for (int i = 0; i < Traduccion.Traductor.contador; i++){
+        tabs += "\t";
+    }
+    lista.add(tabs+"switcher = {");
+    Traduccion.Traductor.contador++;
+    lista.addAll(Traduccion.Traductor.tabulaciones(inst));
+    lista.add(tabs+"\t"+"default: ");
+    Traduccion.Traductor.contador++;
+    lista.addAll(Traduccion.Traductor.tabulaciones(inst_2));
+    lista.add("}");
+    Traduccion.Traductor.contador--;
+    Traduccion.Traductor.contador--;
+    Traduccion.Traductor.contador--;
+
+
+    RESULT = lista;
+:}
+;
+
+lista_case ::= lista_case:lista estructura_case:val
+ {:lista.addAll((LinkedList) val);
+  RESULT = (LinkedList) lista;
+   ;
+
+                          :}
+ | estructura_case:val
+ {:
+   LinkedList<String> lista = new LinkedList<>();
+   lista.addAll((LinkedList) val);
+   RESULT = (LinkedList) lista;
+
+                      :}
+ ;
+
+estructura_case ::= CASE expresiones:exp DOSPTOS lista_instrucciones:inst case_end
+{:
+    LinkedList<String> lista = new LinkedList<>();
+
+    lista.add(exp+":");
+
+    Traduccion.Traductor.contador++;
+
+    lista.addAll(Traduccion.Traductor.tabulaciones(inst));
+    lista.add(",");
+    Traduccion.Traductor.contador--;
+
+
+    RESULT = lista;
+:}
+;
+
+case_end ::= BREAK PTOCOMA | /* vacío */;
+
+
+//Estructura del for
+
+estructura_for ::= FOR PARENTESIS_ABERTURA tipodato VARIABLE:val IGUAL expresiones:inicio PTOCOMA
+VARIABLE simbolos_for asignacion_for:a PTOCOMA VARIABLE INCREMENTO PARENTESIS_CIERRE
+LLAVE_ABERTURA lista_instrucciones:inst_1 LLAVE_CIERRE
+{:
+
+        LinkedList<String> lista = new LinkedList<>();
+        lista.add("for "+val+" in range"+"("+inicio+","+a+")"+":");
+
+        Traduccion.Traductor.contador++;
+
+        lista.addAll(Traduccion.Traductor.tabulaciones(inst_1));
+        Traduccion.Traductor.contador--;
+
+
+        RESULT = lista;
+                    :}
+;
+
+
+simbolos_for ::= MAYOR_IGUAL:a | MAYOR_QUE:a | MENOR_IGUAL:a |
+MENOR_QUE:a | IGUAL:a | DOBLE_IGUAL;
+
+asignacion_for ::= expresiones:a{:RESULT = a.toString();:};
+
+// estructura para el while
+
+estructura_while ::= WHILE PARENTESIS_ABERTURA expresiones:exp PARENTESIS_CIERRE LLAVE_ABERTURA lista_instrucciones:inst_1 LLAVE_CIERRE
+{:
+         LinkedList<String> lista = new LinkedList<>();
+                lista.add("while "+exp+" :");
+
+                Traduccion.Traductor.contador++;
+
+                lista.addAll(Traduccion.Traductor.tabulaciones(inst_1));
+                Traduccion.Traductor.contador--;
+
+
+                RESULT = lista;
+:}
+;
+
+
+
+// estructura del do-while
+
+estructura_dowhile ::= DO LLAVE_ABERTURA lista_instrucciones:inst_1 LLAVE_CIERRE WHILE
+ PARENTESIS_ABERTURA expresiones:exp PARENTESIS_CIERRE PTOCOMA
+ {:
+  LinkedList<String> lista = new LinkedList<>();
+
+                 lista.add("while "+"True"+" :");
+
+                 Traduccion.Traductor.contador++;
+
+                String tabs = "";
+                    for (int i = 0; i < Traduccion.Traductor.contador; i++){
+                        tabs += "\t";
+                    }
+                 lista.addAll(Traduccion.Traductor.tabulaciones(inst_1));
+                 lista.add(tabs+do_while+" = "+do_while+" + 1 ");
+                 lista.add(tabs+"if ("+exp.toString()+" )");
+                 lista.add(tabs+"\t"+"break");
+                 Traduccion.Traductor.contador--;
+
+
+                 RESULT = lista;
+ :}
+ ;
+
+
+
+// estructuras para las expresiones
+expresiones  ::=
+  MENOS expresiones:a                      {:RESULT = "-"+a.toString();:}%prec UMENOS
+ |expresiones:a SUMA        expresiones:b     {:RESULT = a.toString()+"+"+b.toString();:}
+ |expresiones:a MENOS     expresiones:b     {:RESULT = a.toString()+"-"+b.toString();:}
+ |expresiones:a MULT        expresiones:b     {:RESULT = a.toString()+"*"+b.toString();:}
+ |expresiones:a DIVISION   expresiones:b     {:RESULT = a.toString()+"/"+b.toString();:}
+ |ENTERO:a {:RESULT = a.toString();:}
+ |DECIMAL: a {:RESULT = a.toString();:}
+ |CADENA: a {:RESULT = a.toString();:}
+ |VARIABLE:a {:RESULT = a.toString(); do_while = a.toString();:}
+ |T_F:a {:RESULT = a.toString();:}
+ |MAYOR_QUE:a {:RESULT = a.toString();:}
+ |MENOR_QUE:a {:RESULT = a.toString();:}
+ |MENOR_IGUAL:a {:RESULT = a.toString();:}
+ |MAYOR_IGUAL:a {:RESULT = a.toString();:}
+ |DOBLE_IGUAL:a {:RESULT = a.toString();:}
+ |DISTINTO:a {:RESULT = a.toString();:}
+ |OR:a {:RESULT = a.toString();:}
+ |AND:a {:RESULT = a.toString();:}
+ |NOT:a {:RESULT = a.toString();:}
+ |llamada_funcion:a {:RESULT = a.toString();:}
+ |expresiones:a OR expresiones:b {:RESULT = a.toString()+" or "+b.toString();:}
+ |expresiones:a AND expresiones:b {:RESULT = a.toString()+" and "+b.toString(); :}
+ |NOT expresiones:a{:RESULT = " not "+a.toString();:}
+ |expresiones:a DOBLE_IGUAL expresiones:b{:RESULT = a.toString()+" == "+b.toString();:}
+ |expresiones:a DISTINTO expresiones:b {:RESULT = a.toString()+" != "+b.toString();:}
+ |expresiones:a MENOR_QUE expresiones:b {:RESULT = a.toString()+" < "+b.toString();:}
+ |expresiones:a MAYOR_QUE expresiones:b {:RESULT = a.toString()+" > "+b.toString();:}
+ |expresiones:a MAYOR_IGUAL expresiones:b {:RESULT = a.toString()+" >= "+b.toString();:}
+ |expresiones:a MENOR_IGUAL expresiones:b {:RESULT = a.toString()+" <= "+b.toString();:}
+
+ ;
+
+tipodato ::= INT | STRING | DOUBLE | CHAR | BOOLEAN;
+
+llamada_funcion ::= VARIABLE:a PARENTESIS_ABERTURA:b expresiones:exp PARENTESIS_CIERRE:c{:RESULT = a.toString()
++b.toString()+exp.toString()+c.toString();:}
+| VARIABLE:a PARENTESIS_ABERTURA:b PARENTESIS_CIERRE:c{:RESULT = a.toString()
+  +b.toString()+c.toString(); :};
+
+
+
+
+
+
+// Definir globales
+
+definir_globales ::= VOID DEFINIR_GLOBALES PARENTESIS_ABERTURA PARENTESIS_CIERRE LLAVE_ABERTURA instrucciones_globales LLAVE_CIERRE;
+
+instrucciones_globales ::= instrucciones_globales definiciones_globales | definiciones_globales;
+
+definiciones_globales ::= tipo_globales ;
+
+tipo_globales ::= DOUBLE VARIABLE:a IGUAL valor:b PTOCOMA{:
+
+    Graficas.Globales global = new Graficas.Globales(a,b.toString());
+    Graficas.Variables.variablesGlobales.add(global);
+
+:}
+
+| STRING VARIABLE:a IGUAL valor:b PTOCOMA
+{:Graficas.Globales global = new Graficas.Globales(a,b.toString());
+      Graficas.Variables.variablesGlobales.add(global);:}
+;
+
+
+
+
+// Gráfica Barras
+
+definir_barras ::= VOID GRAFICABARRAS PARENTESIS_ABERTURA PARENTESIS_CIERRE LLAVE_ABERTURA instrucciones_barras LLAVE_CIERRE{:System.out.println("Es tipo barras");:};
+
+instrucciones_barras ::= instrucciones_barras instruccion_barras | instruccion_barras;
+
+instruccion_barras ::= titulo
+                       |tituloX
+                       |tituloY
+                       |asignacion_valores
+                       |ejex;
+
+titulo ::= STRING TITULO IGUAL valor:a PTOCOMA{:
+Graficas.Identificar.tipo = a.toString();
+:};
+
+tituloX ::= STRING TITULOEJEX IGUAL valor:a PTOCOMA{:
+Graficas.Identificar.TituloEjex = a.toString();
+:};
+tituloY ::= STRING TITULOEJEY IGUAL valor PTOCOMA{:
+Graficas.Identificar.TituloEjey = a.toString();
+:};
+
+ejex ::= STRING ARREGLO EJEX IGUAL LLAVE_ABERTURA valores:a LLAVE_CIERRE PTOCOMA
+{:
+String cadena = a.toString();
+String[] partes = cadena.split(",");
+for (String parte : partes) {
+    // Elimina las comillas dobles alrededor de cada parte (si las hubiera)
+    //parte = parte.replaceAll("\"", "");
+    Graficas.Identificar.ejex.add(parte);
+}
+
+:}
+;
+
+asignacion_valores ::= DOUBLE ARREGLO VALORES IGUAL LLAVE_ABERTURA valores:a LLAVE_CIERRE PTOCOMA{:
+
+System.out.println(a.toString());
+
+:};
+
+
+valores ::= valor:a COMA valores:b {:
+
+RESULT = a.toString()+","+b.toString();
+:}|
+ valor:a {:
+    RESULT = a.toString();
+
+ :};
+
+
+
+
+// instrucciones pie
+
+definir_pie ::= VOID GRAFICAPIE PARENTESIS_ABERTURA PARENTESIS_CIERRE LLAVE_ABERTURA instrucciones_pie LLAVE_CIERRE{:System.out.println("Es tipo Pie");:};
+
+instrucciones_pie ::= instrucciones_pie instruccion_pie | instruccion_pie;
+
+
+instruccion_pie ::= titulo
+|ejex
+|asignacion_valores;
+
+
+
+
+valor ::= DECIMAL:a {:RESULT = a.toString();:}
+| CADENA:a {:RESULT = a.toString();:}
+| VARIABLE :nombre {:
+nombre = nombre.toLowerCase();
+String valor_retornar = "0.00";
+for (Graficas.Globales valor : Graficas.Variables.variablesGlobales) {
+    if (valor.nombre.equals(nombre)) {
+        //System.out.println("Se encontró el valor de la variable global");
+        valor_retornar = valor.valor;
+        break;
+    }
+}
+RESULT = valor_retornar;
+:}
+| definicion_new :a {:RESULT = a.toString();:};
+
+
+definicion_new ::=  DOLAR LLAVE_ABERTURA NEWVALOR COMA
+CADENA:valor1 COMA CADENA:valor2 LLAVE_CIERRE{:
+
+    valor1 = Graficas.Variables.eliminarComillas(valor1);
+    String valor_retornar ="";
+for (Json.Variables_Json valor : Graficas.Variables.variablesJsons) {
+    if (valor.documento.equals(valor1)) {
+
+        if (valor.variable.equals(valor2)) {
+            valor_retornar = valor.valor;
+            break; // Salir del bucle cuando se encuentra el valor deseado
+        }
+    }
+}
+RESULT = valor_retornar;
+
+:} ;
