@@ -1,9 +1,11 @@
 <component name="libraryTable">
-  <library name="Analizadores">
+  <library name="Librerias">
     <CLASSES>
       <root url="jar://$USER_HOME$/Documentos/JFlex y Cup(1)/JFlex y Cup/java-cup-11b-runtime.jar!/" />
       <root url="jar://$USER_HOME$/Documentos/JFlex y Cup(1)/JFlex y Cup/java-cup-11b.jar!/" />
       <root url="jar://$USER_HOME$/Documentos/JFlex y Cup(1)/JFlex y Cup/jflex-1.9.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../jfreechart-1.0.19/lib/jfreechart-1.0.19.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../jfreechart-1.0.19/lib/jcommon-1.0.23.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

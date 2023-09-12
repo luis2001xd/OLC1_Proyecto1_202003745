@@ -930,7 +930,7 @@ class CUP$Parser$actions {
 		
                     LinkedList<String> lista = new LinkedList<>();
 
-                        lista.add("Paso");
+                        lista.add("");
                         RESULT = lista;
                     
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("instrucciones",2, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
@@ -2089,7 +2089,10 @@ class CUP$Parser$actions {
           case 87: // definir_barras ::= VOID GRAFICABARRAS PARENTESIS_ABERTURA PARENTESIS_CIERRE LLAVE_ABERTURA instrucciones_barras LLAVE_CIERRE 
             {
               Object RESULT =null;
-		System.out.println("Es tipo barras");
+		
+Graficas.Graficar.tipo = "Barras";
+Graficas.Graficar.identificar();
+
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("definir_barras",30, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-6)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -2161,6 +2164,11 @@ class CUP$Parser$actions {
           case 95: // titulo ::= STRING TITULO IGUAL valor PTOCOMA 
             {
               Object RESULT =null;
+		int aleft = ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).left;
+		int aright = ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).right;
+		Object a = (Object)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-1)).value;
+		
+Graficas.Graficar.titulo = a.toString();
 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("titulo",35, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-4)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
@@ -2170,6 +2178,11 @@ class CUP$Parser$actions {
           case 96: // tituloX ::= STRING TITULOEJEX IGUAL valor PTOCOMA 
             {
               Object RESULT =null;
+		int aleft = ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).left;
+		int aright = ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).right;
+		Object a = (Object)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-1)).value;
+		
+Graficas.Graficar.TituloEjex = a.toString();
 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("tituloX",33, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-4)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
@@ -2179,6 +2192,11 @@ class CUP$Parser$actions {
           case 97: // tituloY ::= STRING TITULOEJEY IGUAL valor PTOCOMA 
             {
               Object RESULT =null;
+		int aleft = ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).left;
+		int aright = ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).right;
+		Object a = (Object)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-1)).value;
+		
+Graficas.Graficar.TituloEjey = a.toString();
 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("tituloY",34, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-4)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
@@ -2192,7 +2210,14 @@ class CUP$Parser$actions {
 		int aright = ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)).right;
 		Object a = (Object)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-2)).value;
 		
-System.out.println(a.toString());
+String cadena = a.toString();
+String[] partes = cadena.split(",");
+for (String parte : partes) {
+    // Elimina las comillas dobles alrededor de cada parte (si las hubiera)
+    //parte = parte.replaceAll("\"", "");
+    Graficas.Graficar.ejex.add(parte);
+}
+
 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("ejex",39, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-7)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
@@ -2207,7 +2232,20 @@ System.out.println(a.toString());
 		Object a = (Object)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-2)).value;
 		
 
-System.out.println(a.toString());
+String cadena = a.toString();
+ String[] valores = cadena.split(",");
+
+        // Recorrer los valores y agregarlos a la LinkedList como Double
+        for (String valor : valores) {
+            try {
+                double valorDouble = Double.parseDouble(valor);
+                Graficas.Graficar.valores.add(valorDouble);
+            } catch (NumberFormatException e) {
+                System.err.println("Error al convertir el valor: " + valor + " a Double.");
+                Graficas.Graficar.valores.add(0.00);
+            }
+
+        }
 
 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("asignacion_valores",37, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-7)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
@@ -2251,7 +2289,9 @@ RESULT = a.toString()+","+b.toString();
           case 102: // definir_pie ::= VOID GRAFICAPIE PARENTESIS_ABERTURA PARENTESIS_CIERRE LLAVE_ABERTURA instrucciones_pie LLAVE_CIERRE 
             {
               Object RESULT =null;
-		System.out.println("Es tipo Pie");
+		Graficas.Graficar.tipo = "Pie";
+Graficas.Graficar.identificar();
+
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("definir_pie",41, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-6)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -2373,7 +2413,7 @@ RESULT = valor_retornar;
 		
 
     valor1 = Graficas.Variables.eliminarComillas(valor1);
-    String valor_retornar ="";
+    String valor_retornar ="0.00";
 for (Json.Variables_Json valor : Graficas.Variables.variablesJsons) {
     if (valor.documento.equals(valor1)) {
 

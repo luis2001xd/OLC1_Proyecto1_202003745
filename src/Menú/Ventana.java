@@ -9,15 +9,21 @@ import Graficas.Globales;
 import Graficas.Variables;
 import Json.Parser;
 import Lectura.Leer;
+import Tokens.Errores;
+import Tokens.Tabla;
+import jdk.nashorn.internal.parser.Token;
 
 import java.io.*;
+import java.io.File;
+import java.io.IOException;import java.awt.Desktop;
 
 public class Ventana extends JFrame{
     Border border = BorderFactory.createMatteBorder(3,3,3,3, Color.LIGHT_GRAY);
 
     private JPanel panel;
+    private JTable tbLecturas;
     private JLabel etiqueta1, etiqueta2, etiqueta3;
-    private JButton botonAbrir,botonGuardar,botonGuardarComo,botonGenerar,botonAnalizar,botonCambiar;
+    private JButton botonAbrir,botonGuardar,botonGuardarComo,botonAnalizar, reporteTokens, errores;
 
     private JTextField textfield1;
     private JTextArea textarea1, textarea2;
@@ -34,6 +40,7 @@ public class Ventana extends JFrame{
         paneles();
         this.setVisible(true);
         this.setLocationRelativeTo(null);
+
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     }
 
@@ -184,13 +191,22 @@ public class Ventana extends JFrame{
                         textarea2.setText(Traduccion.Traductor.retornarTraduccion());
                         textarea2.setEditable(false);
                         //Graficas.Variables.mostrarGlobales();
+                        Tokens.Tabla.generarHTML();
+                        Tokens.Errores.generarHTML();
                         Traduccion.Traductor.traduccion.clear();
+                        Tabla.tokens.clear();
+                        Errores.errores.clear();
+
 
                     } else if (seleccion.equals("Json")) {
                         System.out.println("Seleccionaste Json");
                         textarea2.setText("hola soy el json");
                         Json.Parser.nombreDocumento = nombreArchivo2;
                         analizarJson();
+                        Tokens.Tabla.generarHTML();
+                        Tokens.Errores.generarHTML();
+                        Tabla.tokens.clear();
+                        Errores.errores.clear();
 
 
                         textarea2.setEditable(false);
@@ -205,6 +221,61 @@ public class Ventana extends JFrame{
         this.botonAnalizar.addActionListener(Analizar);
 
 
+        this.reporteTokens = new JButton("Reporte tokens");
+        this.reporteTokens.setBounds(20,480,180,40);
+        this.reporteTokens.setBackground(new Color(214, 219, 223));
+        this.reporteTokens.setFont(new Font("Gadugi",Font.BOLD,14));
+        this.panel.add(reporteTokens);
+
+        ActionListener Reptok = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                try {
+                    File htmlFile = new File("tokens.html");
+
+                    if (htmlFile.exists() && Desktop.isDesktopSupported()) {
+                        Desktop.getDesktop().browse(htmlFile.toURI());
+                    } else {
+                        System.out.println("El archivo tokens.html no existe o no se puede abrir.");
+                    }
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            }
+
+        };
+
+        this.reporteTokens.addActionListener(Reptok);
+
+
+
+        this.errores = new JButton("Errores léxicos");
+        this.errores.setBounds(20,600,180,40);
+        this.errores.setBackground(new Color(214, 219, 223));
+        this.errores.setFont(new Font("Gadugi",Font.BOLD,14));
+        this.panel.add(errores);
+
+        ActionListener error = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                try {
+                    File htmlFile = new File("errores.html");
+
+                    if (htmlFile.exists() && Desktop.isDesktopSupported()) {
+                        Desktop.getDesktop().browse(htmlFile.toURI());
+                    } else {
+                        System.out.println("El archivo errores.html no existe o no se puede abrir.");
+                    }
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            }
+
+        };
+
+        this.errores.addActionListener(error);
 
     }
 

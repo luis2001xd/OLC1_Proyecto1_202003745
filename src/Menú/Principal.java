@@ -34,9 +34,9 @@ public class Principal {
         //String json = Lectura.Leer.LeerArchivo("/home/cluiis/IdeaProjects/OLC1_Proyecto1_202003745/Pruebas/archivo.json");
 
         //analizar(json);
-        //new Ventana();
-        Double x = 12.0;
-        System.out.println(x);
+        new Ventana();
+        //Double x = 12.0;
+        //System.out.println(x);
     }
 
 

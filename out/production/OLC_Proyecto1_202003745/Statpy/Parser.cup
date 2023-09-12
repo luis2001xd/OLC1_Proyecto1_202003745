@@ -180,7 +180,7 @@ instrucciones ::= declaracion: val {:RESULT = val;:}
                   |definir_pie{:
                     LinkedList<String> lista = new LinkedList<>();
 
-                        lista.add("Paso");
+                        lista.add("");
                         RESULT = lista;
                     :}
                   |error  PTOCOMA :val{:
@@ -565,7 +565,10 @@ tipo_globales ::= DOUBLE VARIABLE:a IGUAL valor:b PTOCOMA{:
 
 // Gráfica Barras
 
-definir_barras ::= VOID GRAFICABARRAS PARENTESIS_ABERTURA PARENTESIS_CIERRE LLAVE_ABERTURA instrucciones_barras LLAVE_CIERRE{:System.out.println("Es tipo barras");:};
+definir_barras ::= VOID GRAFICABARRAS PARENTESIS_ABERTURA PARENTESIS_CIERRE LLAVE_ABERTURA instrucciones_barras LLAVE_CIERRE{:
+Graficas.Graficar.tipo = "Barras";
+Graficas.Graficar.identificar();
+:};
 
 instrucciones_barras ::= instrucciones_barras instruccion_barras | instruccion_barras;
 
@@ -575,20 +578,46 @@ instruccion_barras ::= titulo
                        |asignacion_valores
                        |ejex;
 
-titulo ::= STRING TITULO IGUAL valor PTOCOMA;
+titulo ::= STRING TITULO IGUAL valor:a PTOCOMA{:
+Graficas.Graficar.titulo = a.toString();
+:};
 
-tituloX ::= STRING TITULOEJEX IGUAL valor PTOCOMA;
-tituloY ::= STRING TITULOEJEY IGUAL valor PTOCOMA;
+tituloX ::= STRING TITULOEJEX IGUAL valor:a PTOCOMA{:
+Graficas.Graficar.TituloEjex = a.toString();
+:};
+tituloY ::= STRING TITULOEJEY IGUAL valor:a PTOCOMA{:
+Graficas.Graficar.TituloEjey = a.toString();
+:};
 
 ejex ::= STRING ARREGLO EJEX IGUAL LLAVE_ABERTURA valores:a LLAVE_CIERRE PTOCOMA
 {:
-System.out.println(a.toString());
+String cadena = a.toString();
+String[] partes = cadena.split(",");
+for (String parte : partes) {
+    // Elimina las comillas dobles alrededor de cada parte (si las hubiera)
+    //parte = parte.replaceAll("\"", "");
+    Graficas.Graficar.ejex.add(parte);
+}
+
 :}
 ;
 
 asignacion_valores ::= DOUBLE ARREGLO VALORES IGUAL LLAVE_ABERTURA valores:a LLAVE_CIERRE PTOCOMA{:
 
-System.out.println(a.toString());
+String cadena = a.toString();
+ String[] valores = cadena.split(",");
+
+        // Recorrer los valores y agregarlos a la LinkedList como Double
+        for (String valor : valores) {
+            try {
+                double valorDouble = Double.parseDouble(valor);
+                Graficas.Graficar.valores.add(valorDouble);
+            } catch (NumberFormatException e) {
+                System.err.println("Error al convertir el valor: " + valor + " a Double.");
+                Graficas.Graficar.valores.add(0.00);
+            }
+
+        }
 
 :};
 
@@ -607,7 +636,9 @@ RESULT = a.toString()+","+b.toString();
 
 // instrucciones pie
 
-definir_pie ::= VOID GRAFICAPIE PARENTESIS_ABERTURA PARENTESIS_CIERRE LLAVE_ABERTURA instrucciones_pie LLAVE_CIERRE{:System.out.println("Es tipo Pie");:};
+definir_pie ::= VOID GRAFICAPIE PARENTESIS_ABERTURA PARENTESIS_CIERRE LLAVE_ABERTURA instrucciones_pie LLAVE_CIERRE{:Graficas.Graficar.tipo = "Pie";
+Graficas.Graficar.identificar();
+:};
 
 instrucciones_pie ::= instrucciones_pie instruccion_pie | instruccion_pie;
 
@@ -640,7 +671,7 @@ definicion_new ::=  DOLAR LLAVE_ABERTURA NEWVALOR COMA
 CADENA:valor1 COMA CADENA:valor2 LLAVE_CIERRE{:
 
     valor1 = Graficas.Variables.eliminarComillas(valor1);
-    String valor_retornar ="";
+    String valor_retornar ="0.00";
 for (Json.Variables_Json valor : Graficas.Variables.variablesJsons) {
     if (valor.documento.equals(valor1)) {
 

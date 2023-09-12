@@ -78,6 +78,14 @@ void main (){
         string TituloY= "Eje Y";
 	}
 
+	void GraFicaBarras(){
+    		string Titulo = titulo1;
+            string [] Ejex = { ${NewValor, "archivo.json", "ejex1"} , ${NewValor, "archivo.json", "ejex2"},"hola"};
+            double [] Valores= { reprobados, ${NewValor, "archivo.json", "val2"}, 80.123};
+            string TituloX= "Eje X";
+            string TituloY= "Eje Y";
+    	}
+
 
 }
 
