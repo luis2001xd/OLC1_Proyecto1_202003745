@@ -54,9 +54,9 @@ public class Graficar {
 
 
         // Mostrar
-        //ChartFrame frame = new ChartFrame("Gráfica", grafica);
-        //frame.pack();
-        //frame.setVisible(true);
+        ChartFrame frame = new ChartFrame("Gráfica", grafica);
+        frame.pack();
+        frame.setVisible(true);
 
         // Guardar la gráfica como imagen
         try {
@@ -86,9 +86,9 @@ public class Graficar {
 
 
         // Mostrar
-        //ChartFrame frame = new ChartFrame("Ejemplo", grafica);
-        //frame.pack();
-        //frame.setVisible(true);
+        ChartFrame frame = new ChartFrame("Ejemplo", grafica);
+        frame.pack();
+        frame.setVisible(true);
 
         // Guardar la gráfica como imagen
         try {

@@ -30,7 +30,7 @@ public class Errores {
 
             // Crear la tabla HTML
             writer.write("<table border='1'>");
-            writer.write("<tr><th>Lexema</th><th>Token</th><th>Línea</th><th>Columna</th></tr>");
+            writer.write("<tr><th>Lexema</th><th>Descripcion</th><th>Línea</th><th>Columna</th></tr>");
 
             // Agregar filas de la tabla basadas en la lista de errores
             for (Errores error : errores) {

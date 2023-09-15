@@ -897,7 +897,9 @@ return new Symbol (sym.ENTERO,yyline,yycolumn, yytext());
           // fall through
           case 61: break;
           case 2:
-            { System.out.println("Error Lexico: " + yytext() + " | Fila:" + yyline + " | Columna: " + yycolumn);
+            { Tokens.Errores token = new Tokens.Errores(yytext(), "Error lexico", yyline, yycolumn);
+Tokens.Errores.errores.add(token);
+System.out.println("Error Lexico: " + yytext() + " | Fila:" + yyline + " | Columna: " + yycolumn);
             }
           // fall through
           case 62: break;

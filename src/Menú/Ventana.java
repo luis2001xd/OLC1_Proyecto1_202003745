@@ -16,7 +16,7 @@ import jdk.nashorn.internal.parser.Token;
 import java.io.*;
 import java.io.File;
 import java.io.IOException;import java.awt.Desktop;
-
+import javax.swing.JOptionPane;
 public class Ventana extends JFrame{
     Border border = BorderFactory.createMatteBorder(3,3,3,3, Color.LIGHT_GRAY);
 
@@ -79,7 +79,7 @@ public class Ventana extends JFrame{
         this.panel.add(etiqueta2);
 
         this.etiqueta3 = new JLabel();
-        this.etiqueta3.setBounds(230,450,130,30);
+        this.etiqueta3.setBounds(230,400,130,30);
         this.etiqueta3.setVerticalAlignment(JLabel.TOP);
         this.etiqueta3.setHorizontalAlignment(JLabel.CENTER);
 
@@ -196,11 +196,12 @@ public class Ventana extends JFrame{
                         Traduccion.Traductor.traduccion.clear();
                         Tabla.tokens.clear();
                         Errores.errores.clear();
+                        Variables.variablesGlobales.clear();
 
 
                     } else if (seleccion.equals("Json")) {
                         System.out.println("Seleccionaste Json");
-                        textarea2.setText("hola soy el json");
+                        JOptionPane.showMessageDialog(null, "Archivo JSON leído con éxito", "Éxito", JOptionPane.INFORMATION_MESSAGE);
                         Json.Parser.nombreDocumento = nombreArchivo2;
                         analizarJson();
                         Tokens.Tabla.generarHTML();
@@ -291,9 +292,10 @@ public class Ventana extends JFrame{
         this.textarea2 = new JTextArea();
 
         this.textarea2.setBorder(border);
+        this.textarea2.setFont(new Font("Gadugi",Font.BOLD,12));
         textarea2.setTabSize(4);
         this.scrollpane2 = new JScrollPane(textarea2);
-        this.scrollpane2.setBounds(230,480,600,200);
+        this.scrollpane2.setBounds(230,430,600,250);
         this.panel.add(scrollpane2);
 
     }

@@ -49,7 +49,7 @@ non terminal LinkedList lista_instrucciones;
 
 
 // no terminales para declaraciones de variables
-non terminal declaracion_variables;
+
 non terminal declaracion;
 
 
@@ -61,8 +61,8 @@ non terminal estructura_for;
 //no terminales para asignaciones
 non terminal expresiones;
 non terminal llamada_funcion;
-non terminal variable;
-non terminal expresion;
+
+
 // otros
 non terminal imprimir;
 
@@ -75,14 +75,13 @@ non terminal declaracion_sin_asignar;
 non terminal LinkedList lista_case;
 non terminal estructura_case;
 non terminal case_end;
-non terminal expresion_for;
+
 non terminal estructura_while;
 non terminal estructura_dowhile;
 non terminal definir_globales;
 non terminal instrucciones_globales;
 non terminal tipo_globales;
 non terminal definiciones_globales;
-non terminal definicion_double;
 non terminal definir_barras;
 non terminal instrucciones_barras;
 non terminal instruccion_barras;
@@ -165,6 +164,7 @@ instrucciones ::= declaracion: val {:RESULT = val;:}
                   |estructura_for:val{:RESULT = val;:}
                   |estructura_while:val{:RESULT = val;:}
                   |estructura_dowhile:val {:RESULT = val;:}
+                  |case_end:val {:RESULT = val;:}
                   |definir_globales{:
                      LinkedList<String> lista = new LinkedList<>();
 
@@ -360,7 +360,7 @@ estructura_else ::= ELSE LLAVE_ABERTURA lista_instrucciones:inst LLAVE_CIERRE
 
 estructura_switch ::= SWITCH PARENTESIS_ABERTURA expresiones:exp PARENTESIS_CIERRE LLAVE_ABERTURA
 lista_case:inst DEFAULT DOSPTOS
-lista_instrucciones:inst_2 case_end LLAVE_CIERRE
+lista_instrucciones:inst_2  LLAVE_CIERRE
 {:
     LinkedList<String> lista = new LinkedList<>();
 
@@ -401,7 +401,7 @@ lista_case ::= lista_case:lista estructura_case:val
                       :}
  ;
 
-estructura_case ::= CASE expresiones:exp DOSPTOS lista_instrucciones:inst case_end
+estructura_case ::= CASE expresiones:exp DOSPTOS lista_instrucciones:inst
 {:
     LinkedList<String> lista = new LinkedList<>();
 
@@ -418,7 +418,12 @@ estructura_case ::= CASE expresiones:exp DOSPTOS lista_instrucciones:inst case_e
 :}
 ;
 
-case_end ::= BREAK PTOCOMA | /* vacío */;
+case_end ::= BREAK PTOCOMA{:
+LinkedList<String> lista = new LinkedList<>();
+
+    lista.add("break");
+    RESULT = lista;
+:} ;
 
 
 //Estructura del for
@@ -443,7 +448,7 @@ LLAVE_ABERTURA lista_instrucciones:inst_1 LLAVE_CIERRE
 
 
 simbolos_for ::= MAYOR_IGUAL:a | MAYOR_QUE:a | MENOR_IGUAL:a |
-MENOR_QUE:a | IGUAL:a | DOBLE_IGUAL;
+MENOR_QUE:a | IGUAL:a | DOBLE_IGUAL:a;
 
 asignacion_for ::= expresiones:a{:RESULT = a.toString();:};
 
