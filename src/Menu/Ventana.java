@@ -1,17 +1,14 @@
-package Menú;
+package Menu;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import Graficas.Globales;
 import Graficas.Variables;
-import Json.Parser;
 import Lectura.Leer;
 import Tokens.Errores;
 import Tokens.Tabla;
-import jdk.nashorn.internal.parser.Token;
 
 import java.io.*;
 import java.io.File;

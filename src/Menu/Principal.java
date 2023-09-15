@@ -1,4 +1,4 @@
-package Menú;
+package Menu;
 
 import java.io.StringReader;
 
