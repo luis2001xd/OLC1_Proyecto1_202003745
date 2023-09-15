@@ -1,0 +1,11 @@
+Token es la palabra como tal
+Lexema es lo que puede entrar en ese Token
+como por ejemplo mi token sería marca de carro, en esa marca de carro puede estar
+audi, mazda, toyoya
+Ahora un ejemplo más formal es que un token es el identificador, y el lexema es lo que viene en ese identificador
+{:
+    LinkedList<String> lista = new LinkedList<>();
+
+    lista.add("PASO");
+    RESULT = lista;
+            :}
