@@ -54,7 +54,7 @@ public class Graficar {
 
 
         // Mostrar
-        ChartFrame frame = new ChartFrame("Gráfica", grafica);
+        ChartFrame frame = new ChartFrame("Gráfica Barras", grafica);
         frame.pack();
         frame.setVisible(true);
 
@@ -86,7 +86,7 @@ public class Graficar {
 
 
         // Mostrar
-        ChartFrame frame = new ChartFrame("Ejemplo", grafica);
+        ChartFrame frame = new ChartFrame("Grafica Pie", grafica);
         frame.pack();
         frame.setVisible(true);
 

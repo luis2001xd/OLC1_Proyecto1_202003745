@@ -53,6 +53,10 @@ void main (){
             console.write("Esto es un else ");
         }
 
+        do{
+            console.write("hola");
+        }while (contador3 !=2323);
+
 
     } while ( contador != 10 );
 
@@ -103,7 +107,7 @@ void main (){
         string [] Ejex = { ${NewValor, "Prueba1.json", "ejex1"} , ${NewValor, "Prueba2.json", "ejex2"},
         social, ${NewValor, "Prueba2.json", "ejex4"}, otraclase
         };
-        double [] Valores= {matematica5, 80.5, ${NewValor, "Prueba1.json", "val3"},
+        double [] Valores= {MatEmAtIca5, 80.5, ${NewValor, "Prueba2.json", "val3"},
         estadistica6, ${NewValor, "Prueba1.json", "val1"}
         };
         string TituloX= tituloejex;
@@ -131,4 +135,5 @@ void main (){
 /* Comentario
 Multilinea
 */
+
 

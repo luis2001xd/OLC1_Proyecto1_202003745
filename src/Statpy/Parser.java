@@ -691,11 +691,16 @@ public class Parser extends java_cup.runtime.lr_parser {
     public void syntax_error(Symbol s)
     {
             System.err.println("Error Sintactico: "+ s.value + " - Fila: " + s.left + " - Columna: " + s.right + ". Recuperado" );
+            Tokens.Errores token = new Tokens.Errores(s.value.toString(), "Error sintactico", s.left, s.right);
+            Tokens.Errores.errores.add(token);
     }
 
     public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception
     {
             System.err.println("Error Sintactico: "+ s.value + " - Fila: " + s.left + " - Columna: " + s.right + ". Sin recuperacion." );
+
+            Tokens.Errores token = new Tokens.Errores(s.value.toString(), "Error sintactico", s.left, s.right);
+                                    Tokens.Errores.errores.add(token);
     }
 
 
