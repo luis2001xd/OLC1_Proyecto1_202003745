@@ -687,6 +687,7 @@ public class Parser extends java_cup.runtime.lr_parser {
 
 
     String do_while = "";
+
     public void syntax_error(Symbol s)
     {
             System.err.println("Error Sintactico: "+ s.value + " - Fila: " + s.left + " - Columna: " + s.right + ". Recuperado" );
@@ -1003,7 +1004,6 @@ class CUP$Parser$actions {
 		String a = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-1)).value;
 		
     LinkedList<String> lista = new LinkedList<>();
-
     lista.add(a + "=" + "NONE");
     RESULT = lista;
 

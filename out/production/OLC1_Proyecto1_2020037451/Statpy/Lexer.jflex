@@ -84,7 +84,7 @@ CARACTER = [^\r\n]
 ENTER   = \r|\n|\r\n
 COMENTARIOLINEA = "//" {CARACTER}* {ENTER}?
 COMENTARIOMULTI = "/*" [^/]~ "*/"
-VARIABLE = [a-zA-Z_][a-zA-Z0-9_]*
+VARIABLE = [a-zA-Z_Ññ][a-zA-Z0-9_Ññ]*
 
 SPACE   = [\ \r\t\f\t]
 

@@ -8,14 +8,14 @@ package Json;
 /** CUP generated class containing symbol constants. */
 public class sym {
   /* terminals */
-  public static final int COMA = 4;
-  public static final int DOSPTOS = 6;
-  public static final int LLAVE_ABERTURA = 2;
-  public static final int error = 1;
-  public static final int LLAVE_CIERRE = 3;
   public static final int DECIMAL = 7;
   public static final int EOF = 0;
+  public static final int error = 1;
+  public static final int COMA = 4;
   public static final int CADENA = 5;
+  public static final int DOSPTOS = 6;
+  public static final int LLAVE_ABERTURA = 2;
+  public static final int LLAVE_CIERRE = 3;
   public static final String[] terminalNames = new String[] {
   "EOF",
   "error",

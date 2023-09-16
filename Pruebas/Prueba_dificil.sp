@@ -58,7 +58,7 @@ void main (){
 
     // switch con instrucciones anidadas
 
-    int precio = 0;
+    int precioñññ = 0;
 
     switch (precio){
 
@@ -131,3 +131,4 @@ void main (){
 /* Comentario
 Multilinea
 */
+
